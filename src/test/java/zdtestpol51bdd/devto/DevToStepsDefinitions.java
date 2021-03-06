@@ -17,6 +17,7 @@ public class DevToStepsDefinitions {
     WebDriver driver;
     WebDriverWait wait;
     String firstBlogTitle;
+    String firstCastTitle;
 
     @Before
     public void setup(){
@@ -42,5 +43,26 @@ public class DevToStepsDefinitions {
         WebElement blogTitle = driver.findElement(By.tagName("h1"));
         String blogTitleText = blogTitle.getText();
         Assert.assertEquals(firstBlogTitle, blogTitleText);
+    }
+
+    @When("I click text podcast in main page")
+    public void i_click_text_podcast_in_main_page() {
+        WebElement podcast = driver.findElement(By.linkText("Podcasts"));
+        podcast.click();
+    }
+    @When("I click on first cast displayed")
+    public void i_click_on_first_cast_displayed() {
+        wait.until(ExpectedConditions.titleContains("Podcasts"));
+        WebElement firstCast = driver.findElement(By.tagName("h3"));
+        firstCastTitle = firstCast.getText();
+        firstCastTitle = firstCastTitle.replace("podcast","");
+        firstCast.click();
+    }
+    @Then("I should be redirected to cast site")
+    public void i_should_be_redirected_to_cast_site(){
+        wait.until(ExpectedConditions.titleContains(firstCastTitle));
+        WebElement castTitle = driver.findElement(By.tagName("h1"));
+        String castTitleText = castTitle.getText();
+        Assert.assertEquals(firstCastTitle, castTitleText);
     }
 }
