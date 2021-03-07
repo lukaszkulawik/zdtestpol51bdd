@@ -81,16 +81,26 @@ public class DevToStepsDefinitions {
     }
 
     @Then("Top {int} blogs found should have correct phrase in title")
-    public void top_blogs_found_should_have_correct_phrase_in_title(Integer int1)  {
+    public void top_blogs_found_should_have_correct_phrase_in_title(Integer int1){
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h3.crayons-story__title"))); //h3
         wait.until(ExpectedConditions.attributeContains(By.id("substories"),"class","search-results-loaded"));
-        List<WebElement> allPosts = driver.findElements(By.cssSelector(".crayons-story__title > a")); // a
-        if(allPosts.size() >= int1){
-            for (int i=0;i<int1;i++){
+        List<WebElement> allPosts = driver.findElements(By.className("crayons-story__body")); // div - caly wpis
+        if (allPosts.size() >= int1) {
+            for (int i = 0; i < int1; i++) {
                 WebElement singlePost = allPosts.get(i);
-                String singlePostTitle = singlePost.getText().toLowerCase(); // a wyciagaj text
-                Boolean isTestingInTitle = singlePostTitle.contains(searchingPhrase);
-                Assert.assertTrue(isTestingInTitle);
+                WebElement singlePostTitle = singlePost.findElement(By.cssSelector(".crayons-story__title > a")); //tytul kafelka
+                String singlePostTitleText = singlePostTitle.getText().toLowerCase(); // wyciagnij tekst z tytulu
+                Boolean isPhraseInTitle = singlePostTitleText.contains(searchingPhrase);
+                if (isPhraseInTitle) { // isPhraseInTitle == true
+                    Assert.assertTrue(isPhraseInTitle);
+                } else {
+                    WebElement snippet = singlePost.findElement(By.xpath("//div[contains(@class,'crayons-story__snippet')]"));
+                    String snippetText = snippet.getText().toLowerCase();
+                    Boolean isPhraseInSnippet = snippetText.contains(searchingPhrase);
+                    Assert.assertTrue(isPhraseInSnippet);
+                }
+            }
         }
     }
-}}
+}
+
