@@ -4,7 +4,7 @@ Feature: devTo basic features
     When I click on first blog displayed
     Then I should be redirected to blog page
 
-  Scenario:
+  Scenario: Open first seeing podcast
     Given I go to devto main page
     When I click text podcast in main page
     When I click on first cast displayed
