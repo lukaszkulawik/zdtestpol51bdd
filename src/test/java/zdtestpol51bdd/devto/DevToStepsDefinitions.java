@@ -1,5 +1,6 @@
 package zdtestpol51bdd.devto;
 
+import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -11,6 +12,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.Keys;
 
@@ -22,6 +24,7 @@ public class DevToStepsDefinitions {
     String firstBlogTitle;
     String firstCastTitle;
     String searchingPhrase;
+
     @Before
     public void setup(){
         System.setProperty("webdriver.chrome.driver","src/main/resources/chromedriver.exe");
@@ -77,17 +80,17 @@ public class DevToStepsDefinitions {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h3.crayons-story__title"))); //h3
         wait.until(ExpectedConditions.attributeContains(By.id("substories"),"class","search-results-loaded"));
         List<WebElement> allPosts = driver.findElements(By.className("crayons-story__body")); // div - caly wpis
-        if(allPosts.size() >= int1){
-            for (int i=0;i<int1;i++){
+        if(allPosts.size() >= int1) {
+            for (int i = 0; i < int1; i++) {
                 WebElement singlePost = allPosts.get(i);
                 WebElement singlePostTitle = singlePost.findElement(By.cssSelector(".crayons-story__title > a")); //tytul kafelka
                 String singlePostTitleText = singlePostTitle.getText().toLowerCase(); // wyciagnij tekst z tytulu
                 Boolean isPhraseInTitle = singlePostTitleText.contains(searchingPhrase);
-                if(isPhraseInTitle){ // isPhraseInTitle == true
+                if (isPhraseInTitle) { // isPhraseInTitle == true
                     Assert.assertTrue(isPhraseInTitle);
-                }
-                else{
-                    WebElement snippet = singlePost.findElement(By.xpath("//div[contains(@class,'crayons-story__snippet')]"));                 String snippetText = snippet.getText().toLowerCase();
+                } else {
+                    WebElement snippet = singlePost.findElement(By.xpath("//div[contains(@class,'crayons-story__snippet')]"));
+                    String snippetText = snippet.getText().toLowerCase();
                     Boolean isPhraseInSnippet = snippetText.contains(searchingPhrase);
                     Assert.assertTrue(isPhraseInSnippet);
                 }
@@ -108,5 +111,12 @@ public class DevToStepsDefinitions {
         Boolean isPauseBtnVisible = pauseBtn.isDisplayed();
         Assert.assertTrue(isPauseBtnVisible);
     }
-}
+
+    @After
+    public void tearDown(){
+        driver.quit();
+    }
+
+    }
+
 

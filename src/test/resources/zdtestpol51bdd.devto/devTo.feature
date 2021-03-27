@@ -15,3 +15,4 @@ Feature: devTo basic features
     Given I go to devto main page
     When I search for "testing" phrase
     Then Top 3 blogs found should have correct phrase in title or snippet
+
